@@ -5,7 +5,31 @@ def select_file():
     filepath = filedialog.askdirectory()
     print(filepath)
     
-    
+def deleteFiles(olderBool, yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordExlusion, typeExclusion):
+    listOfKeywordExlusions = keywordExlusion.split(",")
+    listOfTypeExclusions = typeExclusion.split(",")
+    for file in files:
+        file_path = os.path.join(path, file)
+        last_modified = os.path.getmtime(file_path)
+        last_modified_readable = datetime.datetime.fromtimestamp(last_modified).strftime('%Y-%m-%d %H:%M:%S')
+        difference = now - last_modified
+        if olderBool:
+            if difference > 60*minuteInt + 60*60*hourInt + 60*60*24*dayInt + 60*60*24*7*weekInt + 60*60*24*30*monthInt + 60*60*24*365*yearInt:
+                # file name with extension
+                file_name = os.path.basename(file_path)
+
+                if not(os.path.splitext(file_name)[0] in listOfKeywordExlusions) and not(os.path.splitext(file_name)[1] in listOfTypeExclusions):
+                    print("Deleting " + file_path + " because it was last modified at " + last_modified_readable + " and the current time is " + now_readable)
+                    os.remove(file_path)
+        else:
+            if difference < 60*minuteInt + 60*60*hourInt + 60*60*24*dayInt + 60*60*24*7*weekInt + 60*60*24*30*monthInt + 60*60*24*365*yearInt:
+                # file name with extension
+                file_name = os.path.basename(file_path)
+
+                if not(os.path.splitext(file_name)[0] in listOfKeywordExlusions) and not(os.path.splitext(file_name)[1] in listOfTypeExclusions):
+                    print("Deleting " + file_path + " because it was last modified at " + last_modified_readable + " and the current time is " + now_readable)
+                    os.remove(file_path)
+
 
 
 
