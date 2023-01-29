@@ -4,6 +4,9 @@ import os
 import time
 import datetime
 
+#Select your folder here
+dir = 'C:/Users/evank/OneDrive/Desktop/Test'
+
 def select_file():
     filepath = filedialog.askdirectory()
     print(filepath)
@@ -30,8 +33,13 @@ def deleteFiles(yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordE
     if minuteInt == "":
         minuteInt = 0  
     
-        
-    print(yearInt)
+    minuteInt = int(minuteInt)
+    hourInt = int(hourInt)
+    dayInt = int(dayInt)
+    weekInt = int(weekInt)
+    monthInt = int(monthInt)
+    yearInt = int(yearInt)
+    
     print(keywordExlusion, typeExclusion)
     print(yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordExlusion, typeExclusion)
     if keywordExlusion == 'null':
@@ -47,16 +55,13 @@ def deleteFiles(yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordE
         last_modified = os.path.getmtime(file_path)
         last_modified_readable = datetime.datetime.fromtimestamp(last_modified).strftime('%Y-%m-%d %H:%M:%S')
         difference = now - last_modified
-        
-        print(difference)
-        print(60*int(minuteInt) + 60*60*int(hourInt) + 60*60*24*int(dayInt) + 60*60*24*7*int(weekInt) + 60*60*24*30*int(monthInt) + 60*60*24*365*int(yearInt))
-        print(float(difference) > float(int(60*minuteInt) + int(60*60*hourInt) + int(60*60*24*dayInt) + 60*60*24*7*int(weekInt) + 60*60*24*30*int(monthInt) + 60*60*24*365*int(yearInt)))
 
+        print(difference)
         
-        if difference > (int(60*minuteInt) + int(60*60*hourInt) + int(60*60*24*dayInt) + 60*60*24*7*int(weekInt) + 60*60*24*30*int(monthInt) + 60*60*24*365*int(yearInt)):
+        if difference > 60*minuteInt + 60*60*hourInt + 60*60*24*dayInt + 60*60*24*7*weekInt + 60*60*24*30*monthInt + 60*60*24*365*yearInt:
             # file name with extension
             file_name = os.path.basename(file_path)
-            print('keyboard smash')
+            
             if not(os.path.splitext(file_name)[0] in listOfKeywordExlusions) and not(os.path.splitext(file_name)[1] in listOfTypeExclusions):
                 print("Deleting " + file_path + " because it was last modified at " + last_modified_readable)
                 os.remove(file_path)
@@ -79,13 +84,8 @@ var2 = tk.StringVar(value="Time")
 # dropdown1 = tk.OptionMenu(root, var1, *options)
 # dropdown1.pack()
 
-time_label = tk.Label(root, text="Select Directory")
-time_label.grid(row=0, column=0)
 
-select_file_button = tk.Button(root, text="Select File", command=select_file)
-select_file_button.grid(row=0,column=1)
-dir = 'C:/Users/caitp/Desktop/TAMS/TAMS TEST'
-print('test', dir)
+
 
 
 # dropdown = tk.OptionMenu(root, var2, "older", "younger", variable = var2)
