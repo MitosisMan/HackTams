@@ -11,9 +11,29 @@ def select_file():
 now = time.time()
 
     
-def deleteFiles(olderBool, yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordExlusion, typeExclusion):
+def deleteFiles(yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordExlusion, typeExclusion):
+    if yearInt == "":
+        yearInt = 0
+        
+    if monthInt == "":
+        monthInt = 0
+        
+    if weekInt == "":
+        weekInt = 0
+     
+    if dayInt == "":
+        dayInt = 0
+        
+    if hourInt == "":
+        hourInt = 0   
+        
+    if minuteInt == "":
+        minuteInt = 0  
+    
+        
+    print(yearInt)
     print(keywordExlusion, typeExclusion)
-    print(olderBool, yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordExlusion, typeExclusion)
+    print(yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordExlusion, typeExclusion)
     if keywordExlusion == 'null':
         keywordExlusion = ""
     if typeExclusion == 'null':
@@ -21,34 +41,33 @@ def deleteFiles(olderBool, yearInt, monthInt, weekInt, dayInt, hourInt, minuteIn
     files = os.listdir(dir)
     listOfKeywordExlusions = keywordExlusion.split(",")
     listOfTypeExclusions = typeExclusion.split(",")
+    
     for file in files:
         file_path = os.path.join(dir, file)
         last_modified = os.path.getmtime(file_path)
         last_modified_readable = datetime.datetime.fromtimestamp(last_modified).strftime('%Y-%m-%d %H:%M:%S')
         difference = now - last_modified
-        if olderBool:
-            if difference > float(60*minuteInt + 60*60*hourInt + 60*60*24*dayInt + 60*60*24*7*weekInt + 60*60*24*30*monthInt + 60*60*24*365*yearInt):
-                # file name with extension
-                file_name = os.path.basename(file_path)
+        
+        print(difference)
+        print(60*int(minuteInt) + 60*60*int(hourInt) + 60*60*24*int(dayInt) + 60*60*24*7*int(weekInt) + 60*60*24*30*int(monthInt) + 60*60*24*365*int(yearInt))
+        print(float(difference) > float(int(60*minuteInt) + int(60*60*hourInt) + int(60*60*24*dayInt) + 60*60*24*7*int(weekInt) + 60*60*24*30*int(monthInt) + 60*60*24*365*int(yearInt)))
 
-                if not(os.path.splitext(file_name)[0] in listOfKeywordExlusions) and not(os.path.splitext(file_name)[1] in listOfTypeExclusions):
-                    print("Deleting " + file_path + " because it was last modified at " + last_modified_readable)
-                    os.remove(file_path)
-        else:
-            if difference < float(60*minuteInt + 60*60*hourInt + 60*60*24*dayInt + 60*60*24*7*weekInt + 60*60*24*30*monthInt + 60*60*24*365*yearInt):
-                # file name with extension
-                file_name = os.path.basename(file_path)
-
-                if not(os.path.splitext(file_name)[0] in listOfKeywordExlusions) and not(os.path.splitext(file_name)[1] in listOfTypeExclusions):
-                    print("Deleting " + file_path + " because it was last modified at " + last_modified_readable)
-                    os.remove(file_path)
+        
+        if difference > (int(60*minuteInt) + int(60*60*hourInt) + int(60*60*24*dayInt) + 60*60*24*7*int(weekInt) + 60*60*24*30*int(monthInt) + 60*60*24*365*int(yearInt)):
+            # file name with extension
+            file_name = os.path.basename(file_path)
+            print('keyboard smash')
+            if not(os.path.splitext(file_name)[0] in listOfKeywordExlusions) and not(os.path.splitext(file_name)[1] in listOfTypeExclusions):
+                print("Deleting " + file_path + " because it was last modified at " + last_modified_readable)
+                os.remove(file_path)
+       
 
 
 def on_button_click():
     print(var1.get(), var2.get())
 
 root = tk.Tk()
-root.title("UI Example")
+root.title("Storage Saver")
 
 options = {"Option 1": 1, "Option 2": 2, "Option 3": 3}
 
@@ -69,8 +88,8 @@ dir = 'C:/Users/caitp/Desktop/TAMS/TAMS TEST'
 print('test', dir)
 
 
-dropdown = tk.OptionMenu(root, var2, "older", "younger", variable = var2)
-dropdown.grid(row=0, column=4)
+# dropdown = tk.OptionMenu(root, var2, "older", "younger", variable = var2)
+# dropdown.grid(row=0, column=4)
 
 
 
@@ -126,7 +145,7 @@ typeInput.grid(row=9, column=1)
 typeLabel = tk.Label(root, text="File Type")
 typeLabel.grid(row=9, column=2)
 
-button = tk.Button(root, text="Submit", command=lambda: deleteFiles(dropdown.get(), yearsInput.get(), monthsInput.get(), weeksInput.get(), daysInput.get(), hoursInput.get(), minutesInput.get(), keywordInput.get(), typeInput.get()))
+button = tk.Button(root, text="Submit", command=lambda: deleteFiles(yearsInput.get(), monthsInput.get(), weeksInput.get(), daysInput.get(), hoursInput.get(), minutesInput.get(), keywordInput.get(), typeInput.get()))
 button.grid(row=7,column=2)
 
 # dropdown2 = tk.OptionMenu(root, var2, "Option A", "Option B", "Option C")
