@@ -1,12 +1,47 @@
 import tkinter as tk
 from tkinter import filedialog
+import os
+import time
+import datetime
 
 def select_file():
     filepath = filedialog.askdirectory()
     print(filepath)
     
-    
+now = time.time()
 
+    
+def deleteFiles(olderBool, yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordExlusion, typeExclusion):
+    print(keywordExlusion, typeExclusion)
+    print(olderBool, yearInt, monthInt, weekInt, dayInt, hourInt, minuteInt, keywordExlusion, typeExclusion)
+    if keywordExlusion == 'null':
+        keywordExlusion = ""
+    if typeExclusion == 'null':
+        typeExclusion = ""
+    files = os.listdir(dir)
+    listOfKeywordExlusions = keywordExlusion.split(",")
+    listOfTypeExclusions = typeExclusion.split(",")
+    for file in files:
+        file_path = os.path.join(dir, file)
+        last_modified = os.path.getmtime(file_path)
+        last_modified_readable = datetime.datetime.fromtimestamp(last_modified).strftime('%Y-%m-%d %H:%M:%S')
+        difference = now - last_modified
+        if olderBool:
+            if difference > float(60*minuteInt + 60*60*hourInt + 60*60*24*dayInt + 60*60*24*7*weekInt + 60*60*24*30*monthInt + 60*60*24*365*yearInt):
+                # file name with extension
+                file_name = os.path.basename(file_path)
+
+                if not(os.path.splitext(file_name)[0] in listOfKeywordExlusions) and not(os.path.splitext(file_name)[1] in listOfTypeExclusions):
+                    print("Deleting " + file_path + " because it was last modified at " + last_modified_readable)
+                    os.remove(file_path)
+        else:
+            if difference < float(60*minuteInt + 60*60*hourInt + 60*60*24*dayInt + 60*60*24*7*weekInt + 60*60*24*30*monthInt + 60*60*24*365*yearInt):
+                # file name with extension
+                file_name = os.path.basename(file_path)
+
+                if not(os.path.splitext(file_name)[0] in listOfKeywordExlusions) and not(os.path.splitext(file_name)[1] in listOfTypeExclusions):
+                    print("Deleting " + file_path + " because it was last modified at " + last_modified_readable)
+                    os.remove(file_path)
 
 
 def on_button_click():
@@ -30,6 +65,14 @@ time_label.grid(row=0, column=0)
 
 select_file_button = tk.Button(root, text="Select File", command=select_file)
 select_file_button.grid(row=0,column=1)
+dir = 'C:/Users/caitp/Desktop/TAMS/TAMS TEST'
+print('test', dir)
+
+
+dropdown = tk.OptionMenu(root, var2, "older", "younger", variable = var2)
+dropdown.grid(row=0, column=4)
+
+
 
 time_label = tk.Label(root, text="Time")
 time_label.grid(row=1, column=0)
@@ -70,7 +113,20 @@ minutesInput.grid(row=6, column=1)
 minutesLabel = tk.Label(root, text="minutes")
 minutesLabel.grid(row=6, column=2)
 
-button = tk.Button(root, text="Submit", command=on_button_click)
+
+keywordInput = tk.Entry(root)
+keywordInput.grid(row=8, column=1)
+
+KeywordLabel = tk.Label(root, text="Keywords")
+KeywordLabel.grid(row=8, column=2)
+
+typeInput = tk.Entry(root)
+typeInput.grid(row=9, column=1)
+
+typeLabel = tk.Label(root, text="File Type")
+typeLabel.grid(row=9, column=2)
+
+button = tk.Button(root, text="Submit", command=lambda: deleteFiles(dropdown.get(), yearsInput.get(), monthsInput.get(), weeksInput.get(), daysInput.get(), hoursInput.get(), minutesInput.get(), keywordInput.get(), typeInput.get()))
 button.grid(row=7,column=2)
 
 # dropdown2 = tk.OptionMenu(root, var2, "Option A", "Option B", "Option C")
